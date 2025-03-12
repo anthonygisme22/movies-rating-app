@@ -23,13 +23,17 @@ import { MoviesService, AllMovie } from '../../services/movies.service';
   ]
 })
 export class HomeComponent implements OnInit {
-  searchControl = new FormControl('');
+  // Control for the hero search/suggestion input
+  suggestionControl = new FormControl('');
+  // Dummy suggestions returned by the "AI" (simulate an API call)
+  suggestions: string[] = [];
+  // Array for featured movies loaded from your API
   featuredMovies: AllMovie[] = [];
 
   constructor(private moviesService: MoviesService) { }
 
   ngOnInit(): void {
-    // Load some featured movies
+    // Load featured movies (for example, first 5 movies)
     this.moviesService.getAllMovies().subscribe({
       next: (data) => {
         this.featuredMovies = data.slice(0, 5);
@@ -38,10 +42,23 @@ export class HomeComponent implements OnInit {
         console.error('Error fetching movies:', err);
       }
     });
+  }
 
-    this.searchControl.valueChanges.pipe(debounceTime(300)).subscribe(query => {
-      console.log('Search query:', query);
-      // You can navigate to a search page or filter locally
-    });
+  // Simulated function to "fetch" suggestions from an AI service
+  getSuggestions(): void {
+    const prompt = this.suggestionControl.value;
+    if (prompt && prompt.trim() !== '') {
+      console.log('Fetching suggestions for:', prompt);
+      // Replace the below dummy data with an actual API call to OpenAI in the future
+      this.suggestions = [
+        'The Shawshank Redemption',
+        'Inception',
+        'Interstellar',
+        'The Matrix',
+        'The Godfather'
+      ];
+    } else {
+      this.suggestions = [];
+    }
   }
 }

@@ -1,5 +1,6 @@
-<!-- The root component template -->
-<!-- The NavigationComponent (top nav), then router outlet, then the FooterComponent. -->
 <app-navigation></app-navigation>
-<router-outlet></router-outlet>
+<!-- Wrap the router outlet with a div that triggers animations -->
+<div [@routeAnimations]="prepareRoute(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>
 <app-footer></app-footer>

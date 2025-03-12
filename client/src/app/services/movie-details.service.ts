@@ -28,6 +28,12 @@ export class MovieDetailsService {
     const url = `${this.baseUrl}/movie/${movieId}?api_key=${this.apiKey}&language=en-US`;
     return this.http.get<TMDbMovieDetail>(url);
   }
+  // Add this method to MovieDetailsService:
+  getSimilarMovies(movieId: number): Observable<any> {
+    const url = `${this.baseUrl}/movie/${movieId}/similar?api_key=${this.apiKey}&language=en-US`;
+    return this.http.get<any>(url);
+  }
+
 
   // Search for a movie by title, optionally filtering by primary release year
   getMovieDetailsByTitle(title: string, year?: number): Observable<TMDbMovieDetail> {

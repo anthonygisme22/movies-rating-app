@@ -2,7 +2,11 @@
   <p>{{ errorMessage }}</p>
 </div>
 
-<div *ngIf="movie; else noMovie">
+<div *ngIf="!movie && !errorMessage">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
+<ng-container *ngIf="movie; else noMovie">
   <h2>{{ movie.title }}</h2>
   <img *ngIf="posterUrl" [src]="posterUrl" alt="{{ movie.title }} Poster" style="max-width:300px;">
   <p><strong>Overview:</strong> {{ movie.overview }}</p>
@@ -10,10 +14,15 @@
   <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
 
   <h3>Reviews</h3>
-  <app-user-rating></app-user-rating>
+  <ng-container *ngIf="internalMovie">
+    <app-user-rating [movieId]="internalMovie.movieId"></app-user-rating>
+  </ng-container>
+
+  <h3>Similar Movies</h3>
+  <app-similar-movies [movieId]="movie.id"></app-similar-movies>
 
   <button mat-button color="primary" routerLink="/movies">Back to Movies List</button>
-</div>
+</ng-container>
 
 <ng-template #noMovie>
   <p>No movie found.</p>

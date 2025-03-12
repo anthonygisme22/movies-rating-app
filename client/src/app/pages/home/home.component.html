@@ -1,18 +1,27 @@
 <div class="hero">
-  <div class="hero-content">
-    <h1>Welcome to My Movies App</h1>
-    <p>Discover and rate your favorite movies.</p>
-    <mat-form-field appearance="fill" class="search-field">
-      <mat-label>Search Movies</mat-label>
-      <input matInput [formControl]="searchControl" placeholder="Enter movie title">
-    </mat-form-field>
-    <button mat-button color="accent" routerLink="/movies">Browse Movies</button>
+  <div class="hero-overlay">
+    <div class="hero-content">
+      <h1>What are you in the mood to watch?</h1>
+      <p>Enter your mood or preferred genre and let our AI suggest the perfect movie.</p>
+      <mat-form-field appearance="fill" class="suggestion-field">
+        <mat-label>Your mood or genre</mat-label>
+        <input matInput [formControl]="suggestionControl" placeholder="e.g., action, drama, comedy">
+      </mat-form-field>
+      <button mat-button color="primary" (click)="getSuggestions()">Get Suggestions</button>
+    </div>
   </div>
+</div>
+
+<div class="suggestions-section" *ngIf="suggestions.length > 0">
+  <h2>AI Movie Suggestions</h2>
+  <ul>
+    <li *ngFor="let suggestion of suggestions">{{ suggestion }}</li>
+  </ul>
 </div>
 
 <div class="featured-section">
   <h2>Featured Movies</h2>
-  <div class="featured-movies">
+  <div class="featured-cards">
     <div *ngFor="let movie of featuredMovies" class="featured-card">
       <h3>{{ movie.title }}</h3>
       <p>Rating: {{ movie.rating }}</p>

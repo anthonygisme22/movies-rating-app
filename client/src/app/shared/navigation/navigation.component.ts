@@ -11,6 +11,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { DarkModeService } from '../../services/dark-mode.service';
+import { AuthenticationService, User } from '../../services/authentication.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navigation',
@@ -33,10 +35,20 @@ import { DarkModeService } from '../../services/dark-mode.service';
 export class NavigationComponent {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   searchControl = new FormControl('');
+  currentUser$: Observable<User | null>;
 
-  constructor(public darkModeService: DarkModeService) { }
+  constructor(
+    public darkModeService: DarkModeService,
+    private authService: AuthenticationService
+  ) {
+    this.currentUser$ = this.authService.currentUser$;
+  }
 
   toggleDarkMode(): void {
     this.darkModeService.toggleDarkMode();
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }

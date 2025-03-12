@@ -7,9 +7,10 @@ import { MovieFormComponent } from './pages/movie-form/movie-form.component';
 import { MovieSearchComponent } from './pages/movie-search/movie-search.component';
 import { UserRatingComponent } from './pages/user-rating/user-rating.component';
 import { FavoriteMoviesComponent } from './pages/favorite-movies/favorite-movies.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },          // Home is default
+  { path: '', component: HomeComponent },
   { path: 'movies', component: MoviesListComponent },
   { path: 'movies/new', component: MovieFormComponent },
   { path: 'movies/edit/:id', component: MovieFormComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'search', component: MovieSearchComponent },
   { path: 'reviews', component: UserRatingComponent },
   { path: 'favorites', component: FavoriteMoviesComponent },
+  { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: '' }
 ];
 

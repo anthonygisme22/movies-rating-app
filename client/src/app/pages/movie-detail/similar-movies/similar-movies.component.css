@@ -1,0 +1,16 @@
+.similar-movies-section {
+  padding: 20px;
+  text-align: center;
+}
+
+.similar-movies-grid {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.similar-movie-card {
+  min-width: 200px;
+  flex: none;
+}

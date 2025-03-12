@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MoviesService, AllMovie } from '../../services/movies.service';
-import { debounceTime } from 'rxjs/operators';
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
-// Angular Material modules for search UI
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-movie-search',
@@ -18,46 +12,43 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     RouterModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatListModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule
   ]
 })
 export class MovieSearchComponent implements OnInit {
-  searchControl = new FormControl('');
-  movies: AllMovie[] = [];
+  query: string = '';
+  allMovies: AllMovie[] = [];
   filteredMovies: AllMovie[] = [];
-  errorMessage: string | null = null;
 
-  constructor(private moviesService: MoviesService) { }
+  constructor(private route: ActivatedRoute, private moviesService: MoviesService) { }
 
   ngOnInit(): void {
-    this.moviesService.getAllMovies().subscribe({
-      next: (data) => {
-        this.movies = data;
-        this.filteredMovies = data;
-      },
-      error: (err) => {
-        this.errorMessage = 'Error fetching movies';
-      }
+    // Subscribe to query parameter changes
+    this.route.queryParamMap.subscribe(params => {
+      this.query = params.get('q') || '';
+      this.filterMovies();
     });
 
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300)
-    ).subscribe(query => {
-      this.filterMovies(query ?? '');
+    // Load all movies once
+    this.moviesService.getAllMovies().subscribe({
+      next: (data) => {
+        this.allMovies = data;
+        this.filterMovies();
+      },
+      error: (err) => {
+        console.error('Error fetching movies:', err);
+      }
     });
   }
 
-  filterMovies(query: string): void {
-    if (!query) {
-      this.filteredMovies = this.movies;
+  filterMovies(): void {
+    if (!this.query) {
+      this.filteredMovies = this.allMovies;
     } else {
-      const lowerQuery = query.toLowerCase();
-      this.filteredMovies = this.movies.filter(movie =>
+      const lowerQuery = this.query.toLowerCase();
+      this.filteredMovies = this.allMovies.filter(movie =>
         movie.title.toLowerCase().includes(lowerQuery)
       );
     }

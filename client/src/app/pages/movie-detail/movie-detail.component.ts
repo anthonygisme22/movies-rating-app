@@ -6,18 +6,27 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { UserRatingComponent } from '../user-rating/user-rating.component';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SimilarMoviesComponent } from './similar-movies/similar-movies.component';
 
 @Component({
   selector: 'app-movie-detail',
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.css'],
   standalone: true,
-  imports: [CommonModule, MatButtonModule, RouterModule, UserRatingComponent]
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    RouterModule,
+    UserRatingComponent,
+    LoadingSpinnerComponent,
+    MatDialogModule,
+    SimilarMoviesComponent
+  ]
 })
 export class MovieDetailComponent implements OnInit {
-  // Internal movie details from your database
   internalMovie: AllMovie | null = null;
-  // External movie details from TMDb
   movie: TMDbMovieDetail | null = null;
   errorMessage: string | null = null;
   posterUrl: string | null = null;
@@ -29,15 +38,12 @@ export class MovieDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Get the internal movie ID from the route
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? +idParam : null;
     if (id !== null) {
-      // Fetch internal movie data (including title and year)
       this.moviesService.getMovieById(id).subscribe({
         next: (internalData) => {
           this.internalMovie = internalData;
-          // Use title and year to refine the TMDb lookup
           this.movieDetailsService.getMovieDetailsByTitle(internalData.title, internalData.year).subscribe({
             next: (externalData) => {
               this.movie = externalData;

@@ -1,8 +1,15 @@
-.search-container {
-  max-width: 600px;
-  margin: 0 auto;
+.search-results {
+  padding: 20px;
+  text-align: center;
 }
 
-.error {
-  color: red;
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.result-card {
+  padding: 16px;
 }

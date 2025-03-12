@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MoviesService, AllMovie } from '../../services/movies.service';
-import { RouterModule } from '@angular/router';
-
-// Angular Material modules
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-movies-list',
@@ -16,54 +15,71 @@ import { MatSelectModule } from '@angular/material/select';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatButtonModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    RouterModule
   ]
 })
 export class MoviesListComponent implements OnInit {
   movies: AllMovie[] = [];
   filteredMovies: AllMovie[] = [];
-  displayedMovies: AllMovie[] = [];
-  selectedSort: string = '';
-  itemsToShow: number = 6;
+  filterForm!: FormGroup;
 
-  constructor(private moviesService: MoviesService) { }
+  constructor(private moviesService: MoviesService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.loadMovies();
-  }
+    // Initialize the filtering form
+    this.filterForm = this.fb.group({
+      minRating: [''],
+      maxRating: [''],
+      year: [''],
+      sortBy: ['']
+    });
 
-  loadMovies(): void {
+    // Load all movies
     this.moviesService.getAllMovies().subscribe({
       next: (data) => {
         this.movies = data;
-        // Create a copy for filtering and display only a subset
-        this.filteredMovies = [...data];
-        this.displayedMovies = this.filteredMovies.slice(0, this.itemsToShow);
+        this.filteredMovies = data;
       },
-      error: (err) => {
-        console.error('Error fetching movies:', err);
-      }
+      error: (err) => console.error('Error fetching movies:', err)
+    });
+
+    // Subscribe to changes in the filter form to update filteredMovies
+    this.filterForm.valueChanges.subscribe(values => {
+      this.applyFilters();
     });
   }
 
   applyFilters(): void {
-    if (this.selectedSort === 'rating_desc') {
-      this.filteredMovies = [...this.movies].sort((a, b) => b.rating - a.rating);
-    } else if (this.selectedSort === 'rating_asc') {
-      this.filteredMovies = [...this.movies].sort((a, b) => a.rating - b.rating);
-    } else {
-      this.filteredMovies = [...this.movies];
-    }
-    // Reset the displayed movies based on the new filtered list
-    this.displayedMovies = this.filteredMovies.slice(0, this.itemsToShow);
-  }
+    const { minRating, maxRating, year, sortBy } = this.filterForm.value;
+    let result = [...this.movies];
 
-  loadMore(): void {
-    this.itemsToShow += 6;
-    this.displayedMovies = this.filteredMovies.slice(0, this.itemsToShow);
+    // Filter by rating
+    if (minRating) {
+      result = result.filter(movie => movie.rating >= parseFloat(minRating));
+    }
+    if (maxRating) {
+      result = result.filter(movie => movie.rating <= parseFloat(maxRating));
+    }
+    // Filter by year
+    if (year) {
+      result = result.filter(movie => movie.year === parseInt(year, 10));
+    }
+    // Sorting
+    if (sortBy === 'rating_desc') {
+      result.sort((a, b) => b.rating - a.rating);
+    } else if (sortBy === 'rating_asc') {
+      result.sort((a, b) => a.rating - b.rating);
+    } else if (sortBy === 'year_desc') {
+      result.sort((a, b) => b.year - a.year);
+    } else if (sortBy === 'year_asc') {
+      result.sort((a, b) => a.year - b.year);
+    }
+
+    this.filteredMovies = result;
   }
 }
