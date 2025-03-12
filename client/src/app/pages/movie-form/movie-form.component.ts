@@ -4,8 +4,8 @@ import { MoviesService, AllMovie } from '../../services/movies.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-movie-form',
@@ -17,8 +17,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     RouterModule,
     MatButtonModule,
-    MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class MovieFormComponent implements OnInit {
@@ -35,6 +35,7 @@ export class MovieFormComponent implements OnInit {
   ) {
     this.movieForm = this.fb.group({
       title: ['', Validators.required],
+      year: [null, Validators.required],  // New field for release year
       rating: [null, [Validators.required, Validators.min(0)]],
       bakedScale: [null, [Validators.required, Validators.min(0)]]
     });
@@ -49,12 +50,14 @@ export class MovieFormComponent implements OnInit {
         next: (data) => {
           this.movieForm.patchValue({
             title: data.title,
+            year: data.year,          // Patch the year field
             rating: data.rating,
             bakedScale: data.bakedScale
           });
         },
         error: (err) => {
-          this.errorMessage = 'Error fetching movie details for editing.';
+          console.error('Error fetching movie details:', err);
+          this.errorMessage = 'Error fetching movie details.';
         }
       });
     }
@@ -64,10 +67,10 @@ export class MovieFormComponent implements OnInit {
     if (this.movieForm.invalid) {
       return;
     }
-
     const movieData: AllMovie = {
       movieId: this.movieId ? this.movieId : 0,
       title: this.movieForm.value.title,
+      year: this.movieForm.value.year,       // Include the year property
       rating: this.movieForm.value.rating,
       bakedScale: this.movieForm.value.bakedScale
     };
@@ -78,6 +81,7 @@ export class MovieFormComponent implements OnInit {
           this.router.navigate(['/movies']);
         },
         error: (err) => {
+          console.error('Error updating movie:', err);
           this.errorMessage = 'Error updating movie.';
         }
       });
@@ -87,6 +91,7 @@ export class MovieFormComponent implements OnInit {
           this.router.navigate(['/movies']);
         },
         error: (err) => {
+          console.error('Error creating movie:', err);
           this.errorMessage = 'Error creating movie.';
         }
       });

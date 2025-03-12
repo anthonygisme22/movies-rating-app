@@ -5,21 +5,22 @@ import { Observable } from 'rxjs';
 
 /**
  * Represents a single movie record from the AllMovies table.
- * Adjust property names/types as needed to match your .NET model.
+ * Updated to include the 'year' property for more accurate external lookups.
  */
 export interface AllMovie {
   movieId: number;
   title: string;
+  year: number;      // Added property for the release year
   rating: number;
   bakedScale: number;
-  // Add or remove properties to match your API's AllMovie model
+  // Add or remove properties as needed to match your API's AllMovie model
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoviesService {
-  // This forms the base URL, e.g. http://localhost:5000/api/allmovies
+  // This forms the base URL, e.g., http://localhost:5000/api/allmovies
   private readonly apiUrl: string = `${environment.apiUrl}/allmovies`;
 
   constructor(private http: HttpClient) { }

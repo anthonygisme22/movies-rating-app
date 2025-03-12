@@ -10,7 +10,7 @@ export interface TMDbMovieDetail {
   poster_path: string;
   release_date: string;
   vote_average: number;
-  // Add additional fields as needed
+  // Additional fields as needed...
 }
 
 @Injectable({
@@ -23,15 +23,18 @@ export class MovieDetailsService {
 
   constructor(private http: HttpClient) { }
 
-  // Fetch detailed information using TMDb movie ID
+  // Fetch detailed movie info using TMDb movie ID
   getMovieDetails(movieId: number): Observable<TMDbMovieDetail> {
     const url = `${this.baseUrl}/movie/${movieId}?api_key=${this.apiKey}&language=en-US`;
     return this.http.get<TMDbMovieDetail>(url);
   }
 
-  // Search for a movie by title, then fetch details using the first match's ID
-  getMovieDetailsByTitle(title: string): Observable<TMDbMovieDetail> {
-    const searchUrl = `${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(title)}&language=en-US`;
+  // Search for a movie by title, optionally filtering by primary release year
+  getMovieDetailsByTitle(title: string, year?: number): Observable<TMDbMovieDetail> {
+    let searchUrl = `${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(title)}&language=en-US`;
+    if (year) {
+      searchUrl += `&primary_release_year=${year}`;
+    }
     return this.http.get<any>(searchUrl).pipe(
       switchMap(result => {
         if (result.results && result.results.length > 0) {
