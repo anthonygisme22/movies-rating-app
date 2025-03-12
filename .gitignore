@@ -1,0 +1,33 @@
+# Ignore Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build & Publish folders
+bin/
+obj/
+publish/
+*.Publish.xml
+
+# NuGet Packages
+packages/
+*.nupkg
+*.snupkg
+
+# Rider / VS Code files
+.idea/
+.vscode/
+
+# Mac OS files
+.DS_Store
+
+# Angular / Node.js
+node_modules/
+dist/
+coverage/
+
+# Logs
+*.log
+logs/
