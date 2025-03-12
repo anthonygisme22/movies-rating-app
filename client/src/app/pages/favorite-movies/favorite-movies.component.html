@@ -1,0 +1,17 @@
+<div class="favorites-container">
+  <h2>Your Favorite Movies</h2>
+  <div *ngIf="favoriteMovies.length === 0">
+    <p>You have not added any favorite movies yet.</p>
+  </div>
+  <mat-list *ngIf="favoriteMovies.length > 0">
+    <mat-list-item *ngFor="let movie of favoriteMovies">
+      <div class="movie-info">
+        <span>{{ movie.title }} (Rating: {{ movie.rating }})</span>
+      </div>
+      <div class="movie-actions">
+        <button mat-button color="warn" (click)="removeFavorite(movie.movieId)">Remove</button>
+        <button mat-button [routerLink]="['/movies', movie.movieId]">View Details</button>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</div>

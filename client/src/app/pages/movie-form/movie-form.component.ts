@@ -1,14 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MoviesService, AllMovie } from '../../services/movies.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-movie-form',
   templateUrl: './movie-form.component.html',
   styleUrls: ['./movie-form.component.css'],
-  // Include ReactiveFormsModule in the component's metadata so that directives like formGroup are recognized.
-  imports: [ReactiveFormsModule]
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule
+  ]
 })
 export class MovieFormComponent implements OnInit {
   movieForm: FormGroup;
@@ -53,6 +64,7 @@ export class MovieFormComponent implements OnInit {
     if (this.movieForm.invalid) {
       return;
     }
+
     const movieData: AllMovie = {
       movieId: this.movieId ? this.movieId : 0,
       title: this.movieForm.value.title,

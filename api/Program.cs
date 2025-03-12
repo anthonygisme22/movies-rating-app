@@ -1,37 +1,44 @@
 using Microsoft.EntityFrameworkCore;
-using api.Models; // <-- Change "YourNamespace" to match your EF Core namespace
-using Microsoft.OpenApi.Models;
-using api.Models; 
+using api.Models;  // Adjust if your namespace differs
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Register your DbContext with the connection string named "DefaultConnection" from appsettings.json.
+// Configure CORS: Allow requests from Angular app at http://localhost:4200
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// Register your MoviesDbContext with the connection string from configuration
 builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Swagger/OpenAPI generation so you can test endpoints.
+// (Optional) Register Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Movies API", Version = "v1" });
-});
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Enable Swagger UI in development (or everywhere if you prefer).
+// Enable Developer Exception Page in Development
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movies API v1");
-    });
+    app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection(); // Uncomment if you want HTTPS redirection in production
+app.UseHttpsRedirection();
+
+// Enable the CORS policy before mapping controllers
+app.UseCors("AllowAngular");
 
 app.UseAuthorization();
 

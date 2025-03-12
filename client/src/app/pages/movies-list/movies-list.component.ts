@@ -1,15 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MoviesService, AllMovie } from '../../services/movies.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 
-// Angular Material modules used in the template
+// Angular Material modules
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-movies-list',
@@ -17,21 +15,20 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./movies-list.component.css'],
   standalone: true,
   imports: [
-    MatFormFieldModule,
-    MatSelectModule,
-    MatTableModule,
-    MatPaginatorModule,
+    CommonModule,
+    RouterModule,
+    MatCardModule,
     MatButtonModule,
-    RouterModule
+    MatFormFieldModule,
+    MatSelectModule
   ]
 })
-export class MoviesListComponent implements OnInit, AfterViewInit {
+export class MoviesListComponent implements OnInit {
   movies: AllMovie[] = [];
   filteredMovies: AllMovie[] = [];
+  displayedMovies: AllMovie[] = [];
   selectedSort: string = '';
-  dataSource = new MatTableDataSource<AllMovie>([]);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  itemsToShow: number = 6;
 
   constructor(private moviesService: MoviesService) { }
 
@@ -39,16 +36,13 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
     this.loadMovies();
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-  }
-
   loadMovies(): void {
     this.moviesService.getAllMovies().subscribe({
       next: (data) => {
         this.movies = data;
+        // Create a copy for filtering and display only a subset
         this.filteredMovies = [...data];
-        this.dataSource.data = this.filteredMovies;
+        this.displayedMovies = this.filteredMovies.slice(0, this.itemsToShow);
       },
       error: (err) => {
         console.error('Error fetching movies:', err);
@@ -64,9 +58,12 @@ export class MoviesListComponent implements OnInit, AfterViewInit {
     } else {
       this.filteredMovies = [...this.movies];
     }
-    this.dataSource.data = this.filteredMovies;
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
+    // Reset the displayed movies based on the new filtered list
+    this.displayedMovies = this.filteredMovies.slice(0, this.itemsToShow);
+  }
+
+  loadMore(): void {
+    this.itemsToShow += 6;
+    this.displayedMovies = this.filteredMovies.slice(0, this.itemsToShow);
   }
 }

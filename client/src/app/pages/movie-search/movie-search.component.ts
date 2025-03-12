@@ -3,8 +3,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MoviesService, AllMovie } from '../../services/movies.service';
 import { debounceTime } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
-// Angular Material Modules for search UI
+// Angular Material modules for search UI
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -16,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./movie-search.component.css'],
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     RouterModule,
     MatFormFieldModule,
@@ -43,7 +45,6 @@ export class MovieSearchComponent implements OnInit {
       }
     });
 
-    // Use nullish coalescing to convert null to an empty string
     this.searchControl.valueChanges.pipe(
       debounceTime(300)
     ).subscribe(query => {

@@ -1,0 +1,110 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "client": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "css"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            // Where the production build output goes
+            "outputPath": "dist/client",
+            // The entry HTML file
+            "index": "src/index.html",
+            // The main TypeScript entry (classic, non-standalone)
+            "main": "src/main.ts",
+            // Load zone.js or other polyfills here
+            "polyfills": [
+              "zone.js"
+            ],
+            // TSC config for app code
+            "tsConfig": "tsconfig.app.json",
+            // Favicon and other assets
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            // Global styles
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              /* 
+               * Replace environment.ts with environment.prod.ts 
+               * during a production build.
+               */
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            // Tells ng serve which build target to run by default
+            "browserTarget": "client:build"
+          },
+          "configurations": {
+            "production": {
+              // Serve the production build
+              "browserTarget": "client:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "client:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "zone.js",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+  // Notice we are NOT specifying "defaultProject" here 
+  // to avoid the "invalid name" error.
+}

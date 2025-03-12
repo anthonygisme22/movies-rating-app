@@ -3,9 +3,11 @@
 </div>
 
 <div *ngIf="movie; else noMovie">
-  <h2>{{ movie?.title }}</h2>
-  <p><strong>Rating:</strong> {{ movie?.rating }}</p>
-  <p><strong>Baked Scale:</strong> {{ movie?.bakedScale }}</p>
+  <h2>{{ movie.title }}</h2>
+  <img *ngIf="posterUrl" [src]="posterUrl" alt="{{ movie.title }} Poster" style="max-width:300px;">
+  <p><strong>Overview:</strong> {{ movie.overview }}</p>
+  <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+  <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
   <button mat-button color="primary" routerLink="/movies">Back to Movies List</button>
 </div>
 

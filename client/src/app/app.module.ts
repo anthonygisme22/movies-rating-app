@@ -3,16 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Required for Angular Material
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-// Import standalone components:
+
+// Import standalone components (they are standalone, so we import them, not declare them)
 import { NavigationComponent } from './shared/navigation/navigation.component';
 import { MoviesListComponent } from './pages/movies-list/movies-list.component';
 import { MovieDetailComponent } from './pages/movie-detail/movie-detail.component';
 import { MovieFormComponent } from './pages/movie-form/movie-form.component';
 import { UserRatingComponent } from './pages/user-rating/user-rating.component';
 import { MovieSearchComponent } from './pages/movie-search/movie-search.component';
+import { FavoriteMoviesComponent } from './pages/favorite-movies/favorite-movies.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { MovieSearchComponent } from './pages/movie-search/movie-search.componen
     MovieDetailComponent,
     MovieFormComponent,
     UserRatingComponent,
-    MovieSearchComponent
+    MovieSearchComponent,
+    FavoriteMoviesComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

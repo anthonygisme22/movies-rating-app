@@ -1,0 +1,14 @@
+<h1>{{ title }}</h1>
+<hr>
+
+<div *ngIf="movies && movies.length > 0; else noMovies">
+  <ul>
+    <li *ngFor="let movie of movies">
+      {{ movie.title }} (Rating: {{ movie.rating }})
+    </li>
+  </ul>
+</div>
+
+<ng-template #noMovies>
+  <p>No movies found.</p>
+</ng-template>
