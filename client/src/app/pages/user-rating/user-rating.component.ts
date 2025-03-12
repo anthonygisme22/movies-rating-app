@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 export interface Review {
   reviewer: string;
@@ -12,8 +14,7 @@ export interface Review {
   templateUrl: './user-rating.component.html',
   styleUrls: ['./user-rating.component.css'],
   standalone: true,
-  // Import ReactiveFormsModule so that directives like formGroup are recognized
-  imports: [ReactiveFormsModule]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class UserRatingComponent implements OnInit {
   reviewForm: FormGroup;

@@ -1,0 +1,4 @@
+/* Global or root component styling, if any. */
+:host {
+  display: block;
+}

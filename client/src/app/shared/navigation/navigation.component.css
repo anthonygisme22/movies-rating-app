@@ -9,3 +9,8 @@
 .spacer {
   flex: 1 1 auto;
 }
+
+.toolbar-search {
+  width: 250px;
+  margin-right: 16px;
+}
