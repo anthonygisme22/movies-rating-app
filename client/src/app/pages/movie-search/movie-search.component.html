@@ -1,0 +1,23 @@
+<div class="search-container" style="margin: 16px 0;">
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Search Movies</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Enter movie title">
+  </mat-form-field>
+</div>
+
+<div *ngIf="errorMessage" class="error">
+  <p>{{ errorMessage }}</p>
+</div>
+
+<div *ngIf="filteredMovies && filteredMovies.length > 0; else noResults">
+  <mat-list>
+    <mat-list-item *ngFor="let movie of filteredMovies">
+      <span>{{ movie.title }} (Rating: {{ movie.rating }})</span>
+      <button mat-button [routerLink]="['/movies', movie.movieId]">Details</button>
+    </mat-list-item>
+  </mat-list>
+</div>
+
+<ng-template #noResults>
+  <p>No movies found.</p>
+</ng-template>

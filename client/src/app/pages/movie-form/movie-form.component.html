@@ -1,0 +1,37 @@
+<div class="movie-form">
+  <h2>{{ isEditMode ? 'Edit Movie' : 'Add New Movie' }}</h2>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="movieForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="title">Title:</label>
+      <input id="title" formControlName="title" />
+      <div *ngIf="movieForm.get('title')?.invalid && movieForm.get('title')?.touched">
+        Title is required.
+      </div>
+    </div>
+
+    <div>
+      <label for="rating">Rating:</label>
+      <input id="rating" type="number" formControlName="rating" />
+      <div *ngIf="movieForm.get('rating')?.invalid && movieForm.get('rating')?.touched">
+        Rating is required and must be at least 0.
+      </div>
+    </div>
+
+    <div>
+      <label for="bakedScale">Baked Scale:</label>
+      <input id="bakedScale" type="number" formControlName="bakedScale" />
+      <div *ngIf="movieForm.get('bakedScale')?.invalid && movieForm.get('bakedScale')?.touched">
+        Baked Scale is required and must be at least 0.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="movieForm.invalid">
+      {{ isEditMode ? 'Update Movie' : 'Create Movie' }}
+    </button>
+  </form>
+</div>

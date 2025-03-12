@@ -1,0 +1,14 @@
+<div *ngIf="errorMessage" class="error">
+  <p>{{ errorMessage }}</p>
+</div>
+
+<div *ngIf="movie; else noMovie">
+  <h2>{{ movie?.title }}</h2>
+  <p><strong>Rating:</strong> {{ movie?.rating }}</p>
+  <p><strong>Baked Scale:</strong> {{ movie?.bakedScale }}</p>
+  <button mat-button color="primary" routerLink="/movies">Back to Movies List</button>
+</div>
+
+<ng-template #noMovie>
+  <p>No movie found.</p>
+</ng-template>

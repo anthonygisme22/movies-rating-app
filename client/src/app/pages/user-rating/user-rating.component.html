@@ -1,0 +1,40 @@
+<div class="review-form">
+  <h2>Submit Your Review</h2>
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="reviewer">Name:</label>
+      <input id="reviewer" formControlName="reviewer" />
+      <div *ngIf="reviewForm.get('reviewer')?.invalid && reviewForm.get('reviewer')?.touched">
+        Name is required.
+      </div>
+    </div>
+
+    <div>
+      <label for="rating">Rating (1-5):</label>
+      <input id="rating" type="number" formControlName="rating" />
+      <div *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched">
+        Rating is required (1-5).
+      </div>
+    </div>
+
+    <div>
+      <label for="comment">Comment:</label>
+      <textarea id="comment" formControlName="comment"></textarea>
+    </div>
+
+    <button type="submit" [disabled]="reviewForm.invalid">Submit Review</button>
+  </form>
+</div>
+
+<div class="reviews">
+  <h3>Reviews</h3>
+  <div *ngIf="reviews.length === 0">
+    <p>No reviews yet.</p>
+  </div>
+  <ul>
+    <li *ngFor="let rev of reviews">
+      <strong>{{ rev.reviewer }}</strong> (Rating: {{ rev.rating }})
+      <p>{{ rev.comment }}</p>
+    </li>
+  </ul>
+</div>
